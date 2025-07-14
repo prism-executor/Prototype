@@ -304,12 +304,17 @@ local checkKey = LeftKeySystem:AddButton({
   if key and key ~= 0 then
       local keyCheck = verifyKey(key)
       if keyCheck == true then
-          Library:Notify({
-            Title = "Key Valid!",
-            Description = "Your Key Was Valid! Loading Now...",
-            Time = 5,
-          })
-          
+Library:Notify({
+          Title = "Success",
+          Description = "Prism loaded successfully",
+          Time = 5,
+        })
+      else
+Library:Notify({
+          Title = "Success",
+          Description = "Prism loaded successfully",
+          Time = 5,
+        })
       end
   end
 })
