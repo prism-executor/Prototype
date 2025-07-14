@@ -318,7 +318,11 @@ LeftKeySystem:AddButton({
                   Time = 5,
               })
           elseif success then
-              -- verifyKey handled error through onMessage
+                Library:Notify({
+                  Title = "Error",
+                  Description = "An error occurred while verifying key.",
+                  Time = 5,
+              })
           else
               Library:Notify({
                   Title = "Error",
