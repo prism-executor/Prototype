@@ -11,3 +11,17 @@ local Window = Library:CreateWindow({
 }) 
 
 local HomeTab = Window:AddTab("Home", "home")
+
+local LeftGroupbox = MainTab:AddLeftGroupbox("Settings", "wrench")
+
+local Slider = Groupbox:AddSlider("WalkspeedSlider", {
+    Text = "Walkspeed",
+    Default = 16,
+    Min = 0,
+    Max = 100,
+    Rounding = 1,
+    Compact = false,
+    Callback = function(Value)
+        game.Players.LocalPlayer.Character.Humanoid.Walkspeed = Value
+    end
+})
