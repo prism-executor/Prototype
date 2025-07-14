@@ -384,7 +384,7 @@ KeyGroupbox:AddButton("Verify Key", function()
         local success = verifyKey(key)
         if success then
             Library:Notify({
-                Title = "Verified",
+                Title = "Verified: "..key,
                 Description = "Key verified successfully!",
                 Time = 5
             })
@@ -394,7 +394,7 @@ KeyGroupbox:AddButton("Verify Key", function()
         else
           currentKey = KeyInput
             Library:Notify({
-                Title = "Invalid Key",
+                Title = "Invalid Key: "..key,
                 Description = "That key isn't valid.",
                 Time = 5
             })
