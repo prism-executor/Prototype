@@ -4,7 +4,7 @@ Library:Notify("Loading Prototype...", 5)
 
 local Window = Library:CreateWindow({
     Title = "Prototype",
-    Footer = "v1.0.1",
+    Footer = "v1.0.2",
     ToggleKeybind = Enum.KeyCode.RightControl,
     Center = true,
     AutoShow = true
