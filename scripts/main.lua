@@ -375,11 +375,11 @@ local KeyInput = KeyGroupbox:AddInput("KeyInput", {
     Finished = true,
     Placeholder = "Paste your key...",
     Tooltip = "Enter the key you got from the site"
-    
 })
 
 KeyGroupbox:AddButton("Verify Key", function()
-    local key = KeyInput
+    local key = KeyInput.Value
+
     if key and key ~= "" then
         local success = verifyKey(key)
         if success then
@@ -392,7 +392,6 @@ KeyGroupbox:AddButton("Verify Key", function()
             HomeTab:Show()
             LocalPlayerTab:Show()
         else
-          currentKey = KeyInput
             Library:Notify({
                 Title = "Invalid Key: "..key,
                 Description = "That key isn't valid.",
@@ -400,6 +399,8 @@ KeyGroupbox:AddButton("Verify Key", function()
             })
         end
     end
+    elseif not key then
+      print("No key!")
 end)
 
 KeyGroupbox:AddButton("Copy Key Link", function()
