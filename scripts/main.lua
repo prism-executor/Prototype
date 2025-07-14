@@ -306,53 +306,34 @@ local keyInput = LeftKeySystem:AddInput("keyInput1", {
 })
 
 LeftKeySystem:AddButton({
-    Text = "Check Key",
-    Function = function()
-        local key = Options.keyInput1.Value
-        if key and key ~= "" then
-            local keyCheck = verifyKey(key)
-            if keyCheck == true then
-                Library:Notify({
-                    Title = "Success",
-                    Description = "Key verified successfully!",
-                    Time = 5,
-                })
-            else
-                Library:Notify({
-                    Title = "Error",
-                    Description = "Invalid key.",
-                    Time = 5,
-                })
-            end
-        else
-            Library:Notify({
-                Title = "Warning",
-                Description = "Please enter a key first.",
-                Time = 5,
-            })
-        end
-    end
-})
+  Function = function()
+      local key = Options.keyInput1.Value
+      if key and key ~= "" then
+          local success, result = pcall(verifyKey, key)
 
-local getKey = LeftKeySystem:AddButton({
-    Text = "Get Key",
-    Func = function()
-        local success, message = pcall(copyLink)
-        if success then
-            Library:Notify({
-                Title = "Copied!",
-                Description = "Key link copied to clipboard.",
-                Time = 4,
-            })
-        else
-            Library:Notify({
-                Title = "Error",
-                Description = "Failed to get key link.",
-                Time = 4,
-            })
-        end
-    end,
-    DoubleClick = false
+          if success and result == true then
+              Library:Notify({
+                  Title = "Success",
+                  Description = "Key verified successfully!",
+                  Time = 5,
+              })
+          elseif success then
+              -- verifyKey handled error through onMessage
+          else
+              Library:Notify({
+                  Title = "Error",
+                  Description = "An error occurred while verifying key.",
+                  Time = 5,
+              })
+          end
+      else
+          Library:Notify({
+              Title = "Warning",
+              Description = "Please enter a key first.",
+              Time = 5,
+          })
+      end
+  end
 })
 
 player.CharacterAdded:Connect(function(char)
