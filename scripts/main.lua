@@ -400,7 +400,7 @@ KeyGroupbox:AddButton("Verify Key", function()
         end
     end
     elseif not key then
-      print("No key!")
+      
 end)
 
 KeyGroupbox:AddButton("Copy Key Link", function()
