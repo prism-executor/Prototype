@@ -704,69 +704,6 @@ LeftKeySystem:AddButton({
                     Description = "Key verified successfully!",
                     Time = 5,
                 })
-
-                local LocalPlayerTab = Window:AddTab("Local Player", "user")
-
-                local LeftGroupbox = LocalPlayerTab:AddLeftGroupbox("Movement")
-
-                LeftGroupbox:AddToggle("WalkSpeedBoost", {
-                    Text = "Walk Speed Boost",
-                    Default = false,
-                    Tooltip = "Toggles walk speed boost",
-                    Callback = function(state)
-                        walkSpeedBoostEnabled = state
-                        if state then
-                            savedWalkSpeed = 50
-                            hum.WalkSpeed = savedWalkSpeed
-                        else
-                            hum.WalkSpeed = 16
-                        end
-                    end
-                })
-
-                LeftGroupbox:AddSlider("JumpPowerBoost", {
-                    Text = "Jump Power",
-                    Default = 50,
-                    Min = 50,
-                    Max = 150,
-                    Rounding = 0,
-                    Compact = false,
-                    Callback = function(value)
-                        currentJumpPower = value
-                        if jumpPowerBoostEnabled then
-                            hum.JumpPower = currentJumpPower
-                        end
-                    end
-                })
-
-                LeftGroupbox:AddToggle("EnableJumpPower", {
-                    Text = "Enable Jump Power",
-                    Default = false,
-                    Callback = function(state)
-                        jumpPowerBoostEnabled = state
-                        hum.UseJumpPower = true
-                        if state then
-                            hum.JumpPower = currentJumpPower
-                        else
-                            hum.JumpPower = 50
-                        end
-                    end
-                })
-
-                LeftGroupbox:AddToggle("InfiniteJump", {
-                    Text = "Infinite Jump",
-                    Default = false,
-                    Callback = function(state)
-                        if infiniteJumpConnection then
-                            infiniteJumpConnection:Disconnect()
-                        end
-                        if state then
-                            infiniteJumpConnection = UIS.JumpRequest:Connect(function()
-                                player.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
-                            end)
-                        end
-                    end
-                })
             else
                 Library:Notify({
                     Title = "Error",
