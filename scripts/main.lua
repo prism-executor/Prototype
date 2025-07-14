@@ -292,7 +292,8 @@ local Window = Library:CreateWindow({
 local LocalPlayerTab = Window:AddTab("Local Player", "user")
 local KeySystemTab = Window:AddTab("Key System", "key-round")
 local LeftGroupbox = LocalPlayerTab:AddLeftGroupbox("Movement")
-LocalPlayerTab.Enabled = false
+LocalPlayerTab.Button.Visible = false
+LocalPlayerTab.Container.Visible = false
 
 LeftGroupbox:AddToggle("WalkSpeedBoost", {
     Text = "Walk Speed Boost",
