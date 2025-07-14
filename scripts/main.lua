@@ -289,8 +289,8 @@ local Window = Library:CreateWindow({
     AutoShow = true
 }) 
 
-local LocalPlayerTab = Window:AddTab("Local Player", "user")
 local KeySystemTab = Window:AddTab("Key System", "key-round")
+local LocalPlayerTab = Window:AddTab("Local Player", "user")
 local LeftGroupbox = LocalPlayerTab:AddLeftGroupbox("Movement")
 LocalPlayerTab.Button.Visible = false
 LocalPlayerTab.Container.Visible = false
