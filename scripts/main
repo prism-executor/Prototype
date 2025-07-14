@@ -1,18 +1,19 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/deividcomsono/Obsidian/refs/heads/main/Library.lua"))()
 
-Library:Notify("Loading Prototype...", 5)
+Library:Notify("Loading Prism Script Hub...", 5)
 
 local Window = Library:CreateWindow({
-    Title = "Prototype",
-    Footer = "v1.0.2",
+    Title = "Prism Script Hub",
+    Footer = "v0.0.1",
     ToggleKeybind = Enum.KeyCode.RightControl,
     Center = true,
     AutoShow = true
 }) 
 
-local HomeTab = Window:AddTab("Home", "home")
+local HomeTab = Window:AddTab("Home", "house")
+local LocalPlayerTab = Window:AddTab("Local Player", "user")
 
-local LeftGroupbox = MainTab:AddLeftGroupbox("Settings", "wrench")
+local LeftGroupbox = HomeTab:AddLeftGroupbox("Settings", "wrench")
 
 local Slider = LeftGroupbox:AddSlider("WalkspeedSlider", {
     Text = "Walkspeed",
@@ -22,6 +23,6 @@ local Slider = LeftGroupbox:AddSlider("WalkspeedSlider", {
     Rounding = 1,
     Compact = false,
     Callback = function(Value)
-        game.Players.LocalPlayer.Character.Humanoid.Walkspeed = Value
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
     end
 })
