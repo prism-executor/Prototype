@@ -379,7 +379,7 @@ local KeyInput = KeyGroupbox:AddInput("KeyInput", {
 })
 
 KeyGroupbox:AddButton("Verify Key", function()
-    local key = KeyInput.Text
+    local key = KeyInput
     if key and key ~= "" then
         local success = verifyKey(key)
         if success then
