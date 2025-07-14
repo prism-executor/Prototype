@@ -290,153 +290,28 @@ local Window = Library:CreateWindow({
 }) 
 
 local KeySystemTab = Window:AddTab("Key System", "key-round")
-local LocalPlayerTab = Window:AddTab("Local Player", "user")
-local LeftGroupbox = LocalPlayerTab:AddLeftGroupbox("Movement")
-LocalPlayerTab.Button.Visible = false
-LocalPlayerTab.Container.Visible = false
 
-LeftGroupbox:AddToggle("WalkSpeedBoost", {
-    Text = "Walk Speed Boost",
-    Default = false,
-    Tooltip = "Enables Walk Speed Control",
-    Callback = function(Value)
-        walkSpeedBoostEnabled = Value
-        local char = player.Character or player.CharacterAdded:Wait()
-        local hum = char:FindFirstChildOfClass("Humanoid")
-        if hum then
-            hum.WalkSpeed = Value and savedWalkSpeed or 16
-        end
-    end
+local LeftKeySystem = KeySystemTab:AddLeftGroupbox("Main")
+
+
+local keyInput = LeftKeySystem:AddInput("keyInput1", {
+    Placeholder = "Enter Key...",
+    Finished = true
 })
 
-LeftGroupbox:AddSlider("WalkspeedSlider", {
-    Text = "Walk Speed",
-    Default = savedWalkSpeed,
-    Min = 1,
-    Max = 100,
-    Rounding = 1,
-    Compact = false,
-    Callback = function(Value)
-        savedWalkSpeed = Value
-        local char = player.Character or player.CharacterAdded:Wait()
-        local hum = char:FindFirstChildOfClass("Humanoid")
-        if hum and walkSpeedBoostEnabled then
-            hum.WalkSpeed = Value
-            Library:Notify({
-                Title = "Success",
-                Description = "Set Walk Speed To " .. Value,
-                Time = 5,
-            })
-          elseif not walkSpeedBoostEnabled then
-              Library:Notify({
-                Title = "Nuh Uh",
-                Description = "Turn On The Walk Speed Switch First.",
-                Time = 3
-            })
-        end
-    end
-})
-
-LeftGroupbox:AddToggle("ToggleJumpBoost", {
-    Text = "Jump Power Boost",
-    Default = false,
-    Tooltip = "Lets jump power be controlled",
-    Callback = function(Value)
-        jumpPowerBoostEnabled = Value
-
-        if jumpBoostConnection then
-            jumpBoostConnection:Disconnect()
-            jumpBoostConnection = nil
-        end
-
-        local char = player.Character or player.CharacterAdded:Wait()
-        local hum = char:FindFirstChildOfClass("Humanoid")
-
-        if Value then
-            if hum then
-                hum.UseJumpPower = true
-                hum.JumpPower = currentJumpPower
-            end
-            jumpBoostConnection = UIS.JumpRequest:Connect(function()
-                if not jumpPowerBoostEnabled then return end
-                local char = player.Character or player.CharacterAdded:Wait()
-                local hum = char:FindFirstChildOfClass("Humanoid")
-                if hum then
-                    hum.JumpPower = currentJumpPower
-                    task.wait(0.25)
-                    hum.JumpPower = currentJumpPower
-                end
-            end)
-            Library:Notify({
-                Title = "Jump Power Boost",
-                Description = "Enabled. Slider will work now.",
-                Time = 4
-            })
-        else
-            if hum then
-                hum.UseJumpPower = true
-                hum.JumpPower = 50
-            end
-            Library:Notify({
-                Title = "Jump Power Boost",
-                Description = "Disabled. Slider won’t apply.",
-                Time = 4
-            })
-        end
-    end
-})
-
-LeftGroupbox:AddSlider("JumpPowerSlider", {
-    Text = "Jump Power",
-    Default = currentJumpPower,
-    Min = 10,
-    Max = 200,
-    Rounding = 1,
-    Compact = false,
-    Callback = function(Value)
-        currentJumpPower = Value
-        local char = player.Character or player.CharacterAdded:Wait()
-        local hum = char:FindFirstChildOfClass("Humanoid")
-        if not jumpPowerBoostEnabled then
-              Library:Notify({
-                Title = "Nuh Uh",
-                Description = "Turn On The Jump Power Switch First.",
-                Time = 3
-            })
-            return
-        end
-        if hum then
-            hum.UseJumpPower = true
-            hum.JumpPower = Value
-            Library:Notify({
-                Title = "Success",
-                Description = "Set Jump Power To " .. Value,
-                Time = 5,
-            })
-        end
-    end
-})
-
-LeftGroupbox:AddToggle("InfiniteJump", {
-    Text = "Infinite Jump",
-    Default = false,
-    Tooltip = "Enables Infinite Jump",
-    Callback = function(Value)
-        if infiniteJumpConnection then
-            infiniteJumpConnection:Disconnect()
-            infiniteJumpConnection = nil
-        end
-
-        if Value then
-            infiniteJumpConnection = UIS.JumpRequest:Connect(function()
-                local char = player.Character or player.CharacterAdded:Wait()
-                local hum = char:FindFirstChildOfClass("Humanoid")
-                if hum then
-                    hum:ChangeState(Enum.HumanoidStateType.Jumping)
-                end
-            end)
-        end
-    end
+local checkKey = LeftKeySystem:AddButton({
+  local key = Options.keyInput1.Value
+  if key and key ~= 0 then
+      local keyCheck = verifyKey(key)
+      if keyCheck == true then
+          Library:Notify({
+            Title = "Key Valid!",
+            Description = "Your Key Was Valid! Loading Now...",
+            Time = 5,
+          })
+          
+      end
+  end
 })
 
 player.CharacterAdded:Connect(function(char)
