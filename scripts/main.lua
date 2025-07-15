@@ -316,18 +316,21 @@ LeftKeySystem:AddButton({
           end
 
           if success and result == true then
+                        warn("Success!")
               Library:Notify({
                   Title = "Success",
                   Description = "Key verified successfully!",
                   Time = 5,
               })
           elseif success then
+                warn("ERROR!: 1")
                 Library:Notify({
                   Title = "Error",
                   Description = "An error occurred while verifying key.",
                   Time = 5,
               })
           else
+              warn("ERROR!: 2")
               Library:Notify({
                   Title = "Error",
                   Description = "An error occurred while verifying key.",
