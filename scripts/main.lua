@@ -340,7 +340,7 @@ if currentPlaceId == 6516141723 then
           print("Auto Hide: "..Value)
       end
     })
-    DoorsGroup:AddDropdown("AutoPickup", {
+    local AutoPickupDropdown = DoorsGroup:AddDropdown("AutoPickup", {
       Text = "Auto Pickup",
       Values = {"Keys", "Coins", "Crucifix", "Lockpicks", "Vitamins", "Flashlight", "Items"},
       Multi = true,
