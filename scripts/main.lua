@@ -351,7 +351,7 @@ end
 
 LeftKeySystem:AddButton({
   Text = "Check Key",
-  Callback = function()
+  Func = function()
       Library:Notify({
           Title = "Clicked!",
           Description = "The button was clicked.",
