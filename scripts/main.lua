@@ -307,8 +307,28 @@ local keyInputBox = LeftKeySystem:AddInput("keyInput", {
 })
 
 local function CreateUIAfterkey()
-  local LocalPlayerTab = Window:AddTab("Local Player", "user")
+local CurrentGameTab = Window:AddTab("Current Game", "gamepad-2")
+local LocalPlayerTab = Window:AddTab("Local Player", "user")
 local LeftGroupbox = LocalPlayerTab:AddLeftGroupbox("Movement")
+
+local currentPlaceId = game.PlaceId
+
+-- Example: Only show this tab in Blox Fruits
+if currentPlaceId == 2753915549 then
+    local CurrentGameTab = Window:AddTab("Blox Fruits", "swords")
+    local Group = CurrentGameTab:AddLeftGroupbox("AutoFarm")
+
+    Group:AddLabel("Welcome to Blox Fruits script.")
+    
+end
+
+if currentPlaceId == 6516141723 then
+    local DoorsTab = Window:AddTab("DOORS", "door-closed")
+    local DoorsGroup = DoorsTab:AddLeftGroupbox("Main")
+
+    DoorsGroup:AddLabel("You're in DOORS!")
+    
+end
 
 LeftGroupbox:AddToggle("WalkSpeedBoost", {
     Text = "Walk Speed Boost",
@@ -450,19 +470,13 @@ LeftGroupbox:AddToggle("InfiniteJump", {
 end
 
 local function CheckKey()
-    print("🔍 CheckKey function called")
 
     local key = Options.keyInput.Value
-    print("🔑 Checking key:", key)
 
     if key and key ~= "" then
         local success, result = pcall(verifyKey, key)
-        if not success then
-            warn("verifyKey failed:", result)
-        end
 
         if success and result == true then
-            warn("✅ Success")
             Library:Notify({
                 Title = "Success",
                 Description = "Key verified successfully!",
@@ -470,22 +484,19 @@ local function CheckKey()
             })
         CreateUIAfterkey()
         elseif success then
-            warn("⚠️ Error #1")
             Library:Notify({
                 Title = "Error",
                 Description = "An error occurred while verifying key.",
                 Time = 5,
             })
         else
-            warn("⚠️ Error #2")
             Library:Notify({
                 Title = "Error",
                 Description = "An error occurred while verifying key.",
                 Time = 5,
             })
         end
-    else
-        warn("⚠️ Error #3: No key entered")
+      else
         Library:Notify({
             Title = "Warning",
             Description = "Please enter a key first.",
