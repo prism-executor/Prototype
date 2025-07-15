@@ -278,6 +278,12 @@ local savedWalkSpeed = 16
 local currentJumpPower = 50
 local jumpPowerBoostEnabled = false
 local walkSpeedBoostEnabled = false
+local supportedGames = {
+    [6516141723] = {maxWalkSpeed = 30, maxJumpPower = 75},
+}
+
+local currentPlaceId = game.PlaceId
+local settings = supportedGames[currentPlaceId] or {maxWalkSpeed = 100, maxJumpPower = 200}
 
 local jumpBoostConnection
 local infiniteJumpConnection
@@ -307,27 +313,42 @@ local keyInputBox = LeftKeySystem:AddInput("keyInput", {
 })
 
 local function CreateUIAfterkey()
-local CurrentGameTab = Window:AddTab("Current Game", "gamepad-2")
 local LocalPlayerTab = Window:AddTab("Local Player", "user")
 local LeftGroupbox = LocalPlayerTab:AddLeftGroupbox("Movement")
 
 local currentPlaceId = game.PlaceId
 
--- Example: Only show this tab in Blox Fruits
-if currentPlaceId == 2753915549 then
-    local CurrentGameTab = Window:AddTab("Blox Fruits", "swords")
-    local Group = CurrentGameTab:AddLeftGroupbox("AutoFarm")
-
-    Group:AddLabel("Welcome to Blox Fruits script.")
-    
-end
-
 if currentPlaceId == 6516141723 then
-    local DoorsTab = Window:AddTab("DOORS", "door-closed")
+    local DoorsTab = Window:AddTab("Doors", "door-closed")
     local DoorsGroup = DoorsTab:AddLeftGroupbox("Main")
 
-    DoorsGroup:AddLabel("You're in DOORS!")
-    
+    DoorsGroup:AddLabel("Thanks For Using Prism!")
+    local EspDropdown = CombatTab:AddDropdown("EspTarget", {
+    Text = "ESP Target",
+    Values = {"Entities", "Players", "Keys", "Gold", "Loot", "Doors"},
+    Multi = true,
+    Default = nil,
+      Callback = function(Value)
+        print("ESP targeting:", Value)
+      end
+    })
+    DoorsGroup:AddToggle("AutoHide", {
+      Text = "Auto Hide",
+      Default = false,
+      Tooltip = "Enables Auto Hide.",
+      Callback = function(Value)
+          print("Auto Hide: "..Value)
+      end
+    })
+    DoorsGroup:AddDropdown("AutoPickup", {
+      Text = "Auto Pickup",
+      Values = {"Keys", "Coins", "Crucifix", "Lockpicks", "Vitamins", "Flashlight", "Items"},
+      Multi = true,
+      Default = nil,
+      Callback = function(Value)
+        print("Auto Pickup Values: "..Value)
+      end
+    })
 end
 
 LeftGroupbox:AddToggle("WalkSpeedBoost", {
