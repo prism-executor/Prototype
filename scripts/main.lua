@@ -351,7 +351,13 @@ end
 
 LeftKeySystem:AddButton({
   Text = "Check Key",
-  Function = CheckKey
+  Function = function()
+      Library:Notify({
+          Title = "Clicked!",
+          Description = "The button was clicked.",
+          Time = 3,
+      })
+  end
 })
 
 player.CharacterAdded:Connect(function(char)
