@@ -300,7 +300,7 @@ local KeySystemTab = Window:AddTab("Key System", "key-round")
 local LeftKeySystem = KeySystemTab:AddLeftGroupbox("LeftKeySystem")
 
 
-local keyInput = LeftKeySystem:AddInput("keyInput1", {
+local keyInputBox = LeftKeySystem:AddInput("keyInput", {
     Placeholder = "Enter Key...",
     Finished = true
 })
@@ -308,7 +308,7 @@ local keyInput = LeftKeySystem:AddInput("keyInput1", {
 local function CheckKey()
     print("🔍 CheckKey function called")
 
-    local key = Options.keyInput1.Value
+    local key = Options.keyInput.Value
     print("🔑 Checking key:", key)
 
     if key and key ~= "" then
