@@ -308,7 +308,7 @@ local keyInput = LeftKeySystem:AddInput("keyInput1", {
 local function CheckKey()
     print("🔍 CheckKey function called")
 
-    local key = keyInput.Value
+    local key = Options.keyInput.Value
     print("🔑 Checking key:", key)
 
     if key and key ~= "" then
