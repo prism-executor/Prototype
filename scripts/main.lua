@@ -308,6 +308,7 @@ local keyInput = LeftKeySystem:AddInput("keyInput1", {
 LeftKeySystem:AddButton({
   Function = function()
       local key = Options.keyInput1.Value
+      print("🔑 Checking key:", key)
       
       if key and key ~= "" then
           local success, result = pcall(verifyKey, key)
@@ -316,21 +317,21 @@ LeftKeySystem:AddButton({
           end
 
           if success and result == true then
-                        warn("Success!")
+            warn("Success")
               Library:Notify({
                   Title = "Success",
                   Description = "Key verified successfully!",
                   Time = 5,
               })
           elseif success then
-                warn("ERROR!: 1")
+                warn("Error #1")
                 Library:Notify({
                   Title = "Error",
                   Description = "An error occurred while verifying key.",
                   Time = 5,
               })
           else
-              warn("ERROR!: 2")
+            warn("Error #2")
               Library:Notify({
                   Title = "Error",
                   Description = "An error occurred while verifying key.",
@@ -338,6 +339,7 @@ LeftKeySystem:AddButton({
               })
           end
       else
+        warn("Error #3")
           Library:Notify({
               Title = "Warning",
               Description = "Please enter a key first.",
