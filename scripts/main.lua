@@ -308,8 +308,12 @@ local keyInput = LeftKeySystem:AddInput("keyInput1", {
 LeftKeySystem:AddButton({
   Function = function()
       local key = Options.keyInput1.Value
+      
       if key and key ~= "" then
           local success, result = pcall(verifyKey, key)
+          if not success then
+              warn("verifyKey failed:", result)
+          end
 
           if success and result == true then
               Library:Notify({
