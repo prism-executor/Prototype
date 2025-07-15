@@ -272,6 +272,7 @@ local player = game.Players.LocalPlayer
 local UIS = game:GetService("UserInputService")
 local character = player.Character or player.CharacterAdded:Wait()
 local hum = character:FindFirstChildOfClass("Humanoid")
+local Options = Library.Options
 
 local savedWalkSpeed = 16
 local currentJumpPower = 50
