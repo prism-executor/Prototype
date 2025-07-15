@@ -468,7 +468,7 @@ local function CheckKey()
                 Description = "Key verified successfully!",
                 Time = 5,
             })
-        
+        CreateUIAfterkey()
         elseif success then
             warn("⚠️ Error #1")
             Library:Notify({
