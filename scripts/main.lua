@@ -323,7 +323,7 @@ if currentPlaceId == 6516141723 then
     local DoorsGroup = DoorsTab:AddLeftGroupbox("Main")
 
     DoorsGroup:AddLabel("Thanks For Using Prism!")
-    local EspDropdown = CombatTab:AddDropdown("EspTarget", {
+    local EspDropdown = DoorsGroup:AddDropdown("EspTarget", {
     Text = "ESP Target",
     Values = {"Entities", "Players", "Keys", "Gold", "Loot", "Doors"},
     Multi = true,
