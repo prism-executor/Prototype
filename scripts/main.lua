@@ -306,7 +306,9 @@ local keyInput = LeftKeySystem:AddInput("keyInput1", {
 })
 
 LeftKeySystem:AddButton({
+  Text = "Check Key",
   Function = function()
+      print("Checking Key Point 1")
       local key = keyInput.Value
       print("🔑 Checking key:", key)
       
