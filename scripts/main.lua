@@ -297,7 +297,7 @@ local Window = Library:CreateWindow({
 
 local KeySystemTab = Window:AddTab("Key System", "key-round")
 
-local LeftKeySystem = KeySystemTab:AddLeftGroupbox("Main")
+local LeftKeySystem = KeySystemTab:AddLeftGroupbox("LeftKeySystem")
 
 
 local keyInput = LeftKeySystem:AddInput("keyInput1", {
@@ -305,50 +305,53 @@ local keyInput = LeftKeySystem:AddInput("keyInput1", {
     Finished = true
 })
 
+local function CheckKey()
+    print("🔍 CheckKey function called")
+
+    local key = keyInput.Value
+    print("🔑 Checking key:", key)
+
+    if key and key ~= "" then
+        local success, result = pcall(verifyKey, key)
+        if not success then
+            warn("verifyKey failed:", result)
+        end
+
+        if success and result == true then
+            warn("✅ Success")
+            Library:Notify({
+                Title = "Success",
+                Description = "Key verified successfully!",
+                Time = 5,
+            })
+        elseif success then
+            warn("⚠️ Error #1")
+            Library:Notify({
+                Title = "Error",
+                Description = "An error occurred while verifying key.",
+                Time = 5,
+            })
+        else
+            warn("⚠️ Error #2")
+            Library:Notify({
+                Title = "Error",
+                Description = "An error occurred while verifying key.",
+                Time = 5,
+            })
+        end
+    else
+        warn("⚠️ Error #3: No key entered")
+        Library:Notify({
+            Title = "Warning",
+            Description = "Please enter a key first.",
+            Time = 5,
+        })
+    end
+end
+
 LeftKeySystem:AddButton({
   Text = "Check Key",
-  Function = function()
-      print("Checking Key Point 1")
-      local key = keyInput.Value
-      print("🔑 Checking key:", key)
-      
-      if key and key ~= "" then
-          local success, result = pcall(verifyKey, key)
-          if not success then
-              warn("verifyKey failed:", result)
-          end
-
-          if success and result == true then
-            warn("Success")
-              Library:Notify({
-                  Title = "Success",
-                  Description = "Key verified successfully!",
-                  Time = 5,
-              })
-          elseif success then
-                warn("Error #1")
-                Library:Notify({
-                  Title = "Error",
-                  Description = "An error occurred while verifying key.",
-                  Time = 5,
-              })
-          else
-            warn("Error #2")
-              Library:Notify({
-                  Title = "Error",
-                  Description = "An error occurred while verifying key.",
-                  Time = 5,
-              })
-          end
-      else
-        warn("Error #3")
-          Library:Notify({
-              Title = "Warning",
-              Description = "Please enter a key first.",
-              Time = 5,
-          })
-      end
-  end
+  Function = CheckKey
 })
 
 player.CharacterAdded:Connect(function(char)
