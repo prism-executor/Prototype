@@ -379,8 +379,6 @@ local keyInputBox = LeftKeySystem:AddInput("keyInput", {
 })
 
 local function CreateUIAfterkey()
-Window.Tabs["Key System"].TabButton:Destroy()
-Window.Tabs["Key System"] = nil
 local LocalPlayerTab = Window:AddTab("Local Player", "user")
 local LeftGroupbox = LocalPlayerTab:AddLeftGroupbox("Movement")
 
