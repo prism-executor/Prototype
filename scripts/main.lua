@@ -307,6 +307,17 @@ local KeySystemTab = Window:AddTab("Key System", "key-round")
 local LeftKeySystem = KeySystemTab:AddLeftGroupbox("Key System")
 
 local function Doors()
+local UIS = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local infiniteJumpConnection, noclipRunning, flyConnection, autoGrabConnection
+
+local function Doors()
     local DoorsTab = Window:AddTab("Doors", "door-closed")
     local DoorsGroup = DoorsTab:AddLeftGroupbox("Main")
 
@@ -317,12 +328,14 @@ local function Doors()
         Values = {"Entities", "Players", "Keys", "Gold", "Loot", "Doors"},
         Multi = true,
         Default = nil,
-        Callback = function(Values)
-            print("ESP toggled:", Values)
+        Callback = function(values)
+            for _, v in pairs(values) do
+                print("ESP toggled for:", v)
+                -- Add ESP implementation here if needed
+            end
         end
     })
 
-    -- Entity Features
     local EntityBox = DoorsTab:AddLeftGroupbox("Entity Features")
     local NoScreechToggle = EntityBox:AddToggle("NoScreech", { Text = "No Screech", Default = false })
     local NoEyesToggle = EntityBox:AddToggle("NoEyesDamage", { Text = "No Eyes Damage", Default = false })
@@ -337,21 +350,25 @@ local function Doors()
     local FlyToggle = MovementBox:AddToggle("Fly", { Text = "Fly", Default = false })
 
     local VisualBox = DoorsTab:AddRightGroupbox("Visuals")
-    local EntityESPToggle = VisualBox:AddToggle("EntityESP", { Text = "Entity ESP", Default = false })
-    local PlayerESPToggle = VisualBox:AddToggle("PlayerESP", { Text = "Player ESP", Default = false })
-    local ItemESPToggle = VisualBox:AddToggle("ItemESP", { Text = "Item ESP", Default = false })
-    local DoorNumberESPToggle = VisualBox:AddToggle("DoorNumberESP", { Text = "Door Number ESP", Default = false })
+    VisualBox:AddToggle("EntityESP", { Text = "Entity ESP", Default = false })
+    VisualBox:AddToggle("PlayerESP", { Text = "Player ESP", Default = false })
+    VisualBox:AddToggle("ItemESP", { Text = "Item ESP", Default = false })
+    VisualBox:AddToggle("DoorNumberESP", { Text = "Door Number ESP", Default = false })
 
     local AutoBox = DoorsTab:AddLeftGroupbox("Automation")
-    AutoBox:AddToggle("AutoGrab", { Text = "Auto Grab", Default = false })
-
+    local AutoGrabToggle = AutoBox:AddToggle("AutoGrab", { Text = "Auto Grab", Default = false })
 
     local MiscBox = DoorsTab:AddLeftGroupbox("Misc")
-    MiscBox:AddToggle("GhostMode", { Text = "Ghost Mode", Default = false })
-    
+    local GhostModeToggle = MiscBox:AddToggle("GhostMode", { Text = "Ghost Mode", Default = false })
+
     NoScreechToggle:OnChanged(function(value)
         if value then
             print("NoScreech enabled")
+            Workspace.DescendantAdded:Connect(function(desc)
+                if desc.Name == "Screech" then
+                    desc:Destroy()
+                end
+            end)
         else
             print("NoScreech disabled")
         end
@@ -360,19 +377,86 @@ local function Doors()
     NoEyesToggle:OnChanged(function(value)
         if value then
             print("NoEyesDamage enabled")
+            Workspace.DescendantAdded:Connect(function(desc)
+                if desc.Name == "Eyes" then
+                    desc:Destroy()
+                end
+            end)
         else
             print("NoEyesDamage disabled")
         end
     end)
 
+    AutoUnlockToggle:OnChanged(function(value)
+        if value then
+            print("AutoUnlockDoors enabled")
+            RunService.Heartbeat:Connect(function()
+                for _, door in ipairs(Workspace:GetDescendants()) do
+                    if door.Name == "KeyObtainPrompt" and door:IsA("ProximityPrompt") then
+                        fireproximityprompt(door)
+                    end
+                end
+            end)
+        else
+            print("AutoUnlockDoors disabled")
+        end
+    end)
+
+    AutoCrucifixToggle:OnChanged(function(value)
+        if value then
+            print("AutoUseCrucifix enabled")
+            RunService.Heartbeat:Connect(function()
+                for _, ent in pairs(Workspace:GetChildren()) do
+                    if ent.Name == "RushMoving" or ent.Name == "AmbushMoving" then
+                        local crucifix = player.Backpack:FindFirstChild("Crucifix") or character:FindFirstChild("Crucifix")
+                        if crucifix then
+                            crucifix.Parent = character
+                            crucifix:Activate()
+                        end
+                    end
+                end
+            end)
+        else
+            print("AutoUseCrucifix disabled")
+        end
+    end)
+
+    AutoWinToggle:OnChanged(function(value)
+        if value then
+            print("AutoWin enabled")
+            local exitRoom = Workspace:FindFirstChild("Rooms") and Workspace.Rooms:FindFirstChild("100")
+            if exitRoom then
+                local exitPart = exitRoom:FindFirstChildWhichIsA("BasePart")
+                if exitPart then
+                    character:MoveTo(exitPart.Position + Vector3.new(0, 5, 0))
+                end
+            end
+        else
+            print("AutoWin disabled")
+        end
+    end)
+
+    AutoEscapeToggle:OnChanged(function(value)
+        if value then
+            print("AutoEscape enabled")
+            local exit = Workspace:FindFirstChild("Lift") or Workspace:FindFirstChild("FinalDoor")
+            if exit and exit:FindFirstChildWhichIsA("BasePart") then
+                character:MoveTo(exit.Position + Vector3.new(0, 5, 0))
+            end
+        else
+            print("AutoEscape disabled")
+        end
+    end)
+
     InfiniteJumpToggle:OnChanged(function(value)
         if value then
+            print("InfiniteJump enabled")
             infiniteJumpConnection = UIS.JumpRequest:Connect(function()
-                local char = player.Character or player.CharacterAdded:Wait()
-                local hum = char:FindFirstChildOfClass("Humanoid")
+                local hum = character:FindFirstChildOfClass("Humanoid")
                 if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
             end)
         else
+            print("InfiniteJump disabled")
             if infiniteJumpConnection then
                 infiniteJumpConnection:Disconnect()
                 infiniteJumpConnection = nil
@@ -380,32 +464,26 @@ local function Doors()
         end
     end)
 
-    local noclipRunning = false
+    noclipRunning = false
     NoclipToggle:OnChanged(function(value)
         noclipRunning = value
         if value then
             print("Noclip enabled")
             task.spawn(function()
                 while noclipRunning do
-                    local char = player.Character
-                    if char then
-                        for _, part in pairs(char:GetChildren()) do
-                            if part:IsA("BasePart") then
-                                part.CanCollide = false
-                            end
+                    for _, part in pairs(character:GetDescendants()) do
+                        if part:IsA("BasePart") then
+                            part.CanCollide = false
                         end
                     end
-                    task.wait(0.1)
+                    task.wait()
                 end
             end)
         else
             print("Noclip disabled")
-            local char = player.Character
-            if char then
-                for _, part in pairs(char:GetChildren()) do
-                    if part:IsA("BasePart") then
-                        part.CanCollide = true
-                    end
+            for _, part in pairs(character:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.CanCollide = true
                 end
             end
         end
@@ -414,46 +492,52 @@ local function Doors()
     FlyToggle:OnChanged(function(value)
         if value then
             print("Fly enabled")
+            local hrp = character:FindFirstChild("HumanoidRootPart")
+            local bv = Instance.new("BodyVelocity")
+            bv.Velocity = Vector3.zero
+            bv.MaxForce = Vector3.new(1e9, 1e9, 1e9)
+            bv.Parent = hrp
+            flyConnection = RunService.RenderStepped:Connect(function()
+                bv.Velocity = Workspace.CurrentCamera.CFrame.LookVector * 75
+            end)
         else
             print("Fly disabled")
+            if flyConnection then flyConnection:Disconnect() flyConnection = nil end
+            local hrp = character:FindFirstChild("HumanoidRootPart")
+            if hrp then
+                local bv = hrp:FindFirstChildOfClass("BodyVelocity")
+                if bv then bv:Destroy() end
+            end
         end
     end)
 
-    -- AutoUnlockDoors placeholder
-    AutoUnlockToggle:OnChanged(function(value)
+    AutoGrabToggle:OnChanged(function(value)
         if value then
-            print("AutoUnlockDoors enabled")
+            print("AutoGrab enabled")
+            autoGrabConnection = RunService.RenderStepped:Connect(function()
+                for _, v in pairs(Workspace:GetDescendants()) do
+                    if v:IsA("TouchTransmitter") and v.Parent:IsA("BasePart") then
+                        firetouchinterest(character.HumanoidRootPart, v.Parent, 0)
+                        firetouchinterest(character.HumanoidRootPart, v.Parent, 1)
+                    end
+                end
+            end)
         else
-            print("AutoUnlockDoors disabled")
+            print("AutoGrab disabled")
+            if autoGrabConnection then autoGrabConnection:Disconnect() autoGrabConnection = nil end
         end
     end)
 
-    -- AutoUseCrucifix placeholder
-    AutoCrucifixToggle:OnChanged(function(value)
-        if value then
-            print("AutoUseCrucifix enabled")
-        else
-            print("AutoUseCrucifix disabled")
+    GhostModeToggle:OnChanged(function(value)
+        print("GhostMode", value and "enabled" or "disabled")
+        for _, part in pairs(character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.Transparency = value and 0.6 or 0
+                part.CanCollide = not value
+            end
         end
     end)
-
-    -- AutoWin placeholder
-    AutoWinToggle:OnChanged(function(value)
-        if value then
-            print("AutoWin enabled")
-        else
-            print("AutoWin disabled")
-        end
-    end)
-
-    -- AutoEscape placeholder
-    AutoEscapeToggle:OnChanged(function(value)
-        if value then
-            print("AutoEscape enabled")
-        else
-            print("AutoEscape disabled")
-        end
-    end)
+end
 end
 
 local keyInputBox = LeftKeySystem:AddInput("keyInput", {
