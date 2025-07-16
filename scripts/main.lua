@@ -311,66 +311,149 @@ local function Doors()
     local DoorsGroup = DoorsTab:AddLeftGroupbox("Main")
 
     DoorsGroup:AddLabel("Thanks For Using Prism!")
-    
-    local EspDropdown = DoorsGroup:AddDropdown("EspTarget", {
+
+    DoorsGroup:AddDropdown("EspTarget", {
         Text = "ESP Target",
         Values = {"Entities", "Players", "Keys", "Gold", "Loot", "Doors"},
         Multi = true,
         Default = nil,
         Callback = function(Values)
-            print("Currently enabled ESP options:")
-            for Option, Enabled in pairs(Values) do
-                if Enabled then
-                    print("-", Option)
-                end
-            end
+            print("ESP toggled:", Values)
         end
     })
 
     -- Entity Features
     local EntityBox = DoorsTab:AddLeftGroupbox("Entity Features")
-    EntityBox:AddToggle("EntityESP", { Text = "Entity ESP", Default = false })
-    EntityBox:AddToggle("NoScreech", { Text = "No Screech", Default = false })
-    EntityBox:AddToggle("NoEyesDamage", { Text = "No Eyes Damage", Default = false })
-    EntityBox:AddToggle("HaltSkip", { Text = "Halt Skip", Default = false })
-    EntityBox:AddToggle("FigureAutoStealth", { Text = "Figure Auto-Stealth", Default = false })
-    EntityBox:AddToggle("EntitySoundWarning", { Text = "Entity Sound Warning", Default = false })
+    local NoScreechToggle = EntityBox:AddToggle("NoScreech", { Text = "No Screech", Default = false })
+    local NoEyesToggle = EntityBox:AddToggle("NoEyesDamage", { Text = "No Eyes Damage", Default = false })
+    local AutoUnlockToggle = EntityBox:AddToggle("AutoUnlockDoors", { Text = "Auto Unlock Doors", Default = false })
+    local AutoCrucifixToggle = EntityBox:AddToggle("AutoUseCrucifix", { Text = "Auto-Use Crucifix", Default = false })
+    local AutoWinToggle = EntityBox:AddToggle("AutoWin", { Text = "Auto Win", Default = false })
+    local AutoEscapeToggle = EntityBox:AddToggle("AutoEscape", { Text = "Auto Escape", Default = false })
 
-    -- Movement Features
     local MovementBox = DoorsTab:AddRightGroupbox("Movement")
-    MovementBox:AddToggle("InfiniteJump", { Text = "Infinite Jump", Default = false })
-    MovementBox:AddToggle("Noclip", { Text = "Noclip", Default = false })
-    MovementBox:AddToggle("Fly", { Text = "Fly", Default = false })
+    local InfiniteJumpToggle = MovementBox:AddToggle("InfiniteJump", { Text = "Infinite Jump", Default = false })
+    local NoclipToggle = MovementBox:AddToggle("Noclip", { Text = "Noclip", Default = false })
+    local FlyToggle = MovementBox:AddToggle("Fly", { Text = "Fly", Default = false })
 
-    -- Automation Features
+    local VisualBox = DoorsTab:AddRightGroupbox("Visuals")
+    local EntityESPToggle = VisualBox:AddToggle("EntityESP", { Text = "Entity ESP", Default = false })
+    local PlayerESPToggle = VisualBox:AddToggle("PlayerESP", { Text = "Player ESP", Default = false })
+    local ItemESPToggle = VisualBox:AddToggle("ItemESP", { Text = "Item ESP", Default = false })
+    local DoorNumberESPToggle = VisualBox:AddToggle("DoorNumberESP", { Text = "Door Number ESP", Default = false })
+
     local AutoBox = DoorsTab:AddLeftGroupbox("Automation")
-    AutoBox:AddToggle("AutoUseCrucifix", { Text = "Auto-Use Crucifix", Default = false })
-    AutoBox:AddToggle("AutoUnlockDoors", { Text = "Auto Unlock Doors", Default = false })
-    AutoBox:AddToggle("AutoWin", { Text = "Auto Win", Default = false })
-    AutoBox:AddToggle("AutoEscape", { Text = "Auto Escape", Default = false })
     AutoBox:AddToggle("AutoGrab", { Text = "Auto Grab", Default = false })
 
-    -- Visuals & ESP
-    local VisualBox = DoorsTab:AddRightGroupbox("Visuals")
-    VisualBox:AddToggle("ItemESP", { Text = "Item ESP", Default = false })
-    VisualBox:AddToggle("DoorNumberESP", { Text = "Door Number ESP", Default = false })
-    VisualBox:AddToggle("FakeDoorDetector", { Text = "Fake Door Detector", Default = false })
-    VisualBox:AddToggle("PlayerESP", { Text = "Player ESP", Default = false })
-    VisualBox:AddToggle("PathfinderLines", { Text = "Pathfinder Lines", Default = false })
-    VisualBox:AddToggle("RoomInfoUI", { Text = "Room Info UI", Default = false })
 
-    -- Miscellaneous
     local MiscBox = DoorsTab:AddLeftGroupbox("Misc")
-    MiscBox:AddToggle("ItemSpawner", { Text = "Item Spawner", Default = false })
-    MiscBox:AddSlider("GoldMultiplier", {
-        Text = "Gold Multiplier",
-        Min = 1,
-        Max = 10,
-        Default = 1,
-        Rounding = 1
-    })
     MiscBox:AddToggle("GhostMode", { Text = "Ghost Mode", Default = false })
-    MiscBox:AddToggle("GameIDCheck", { Text = "Game ID Check", Default = false })
+    
+    NoScreechToggle:OnChanged(function(value)
+        if value then
+            print("NoScreech enabled")
+        else
+            print("NoScreech disabled")
+        end
+    end)
+
+    NoEyesToggle:OnChanged(function(value)
+        if value then
+            print("NoEyesDamage enabled")
+        else
+            print("NoEyesDamage disabled")
+        end
+    end)
+
+    InfiniteJumpToggle:OnChanged(function(value)
+        if value then
+            infiniteJumpConnection = UIS.JumpRequest:Connect(function()
+                local char = player.Character or player.CharacterAdded:Wait()
+                local hum = char:FindFirstChildOfClass("Humanoid")
+                if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
+            end)
+        else
+            if infiniteJumpConnection then
+                infiniteJumpConnection:Disconnect()
+                infiniteJumpConnection = nil
+            end
+        end
+    end)
+
+    local noclipRunning = false
+    NoclipToggle:OnChanged(function(value)
+        noclipRunning = value
+        if value then
+            print("Noclip enabled")
+            task.spawn(function()
+                while noclipRunning do
+                    local char = player.Character
+                    if char then
+                        for _, part in pairs(char:GetChildren()) do
+                            if part:IsA("BasePart") then
+                                part.CanCollide = false
+                            end
+                        end
+                    end
+                    task.wait(0.1)
+                end
+            end)
+        else
+            print("Noclip disabled")
+            local char = player.Character
+            if char then
+                for _, part in pairs(char:GetChildren()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = true
+                    end
+                end
+            end
+        end
+    end)
+
+    FlyToggle:OnChanged(function(value)
+        if value then
+            print("Fly enabled")
+        else
+            print("Fly disabled")
+        end
+    end)
+
+    -- AutoUnlockDoors placeholder
+    AutoUnlockToggle:OnChanged(function(value)
+        if value then
+            print("AutoUnlockDoors enabled")
+        else
+            print("AutoUnlockDoors disabled")
+        end
+    end)
+
+    -- AutoUseCrucifix placeholder
+    AutoCrucifixToggle:OnChanged(function(value)
+        if value then
+            print("AutoUseCrucifix enabled")
+        else
+            print("AutoUseCrucifix disabled")
+        end
+    end)
+
+    -- AutoWin placeholder
+    AutoWinToggle:OnChanged(function(value)
+        if value then
+            print("AutoWin enabled")
+        else
+            print("AutoWin disabled")
+        end
+    end)
+
+    -- AutoEscape placeholder
+    AutoEscapeToggle:OnChanged(function(value)
+        if value then
+            print("AutoEscape enabled")
+        else
+            print("AutoEscape disabled")
+        end
+    end)
 end
 
 local keyInputBox = LeftKeySystem:AddInput("keyInput", {
@@ -379,12 +462,14 @@ local keyInputBox = LeftKeySystem:AddInput("keyInput", {
 })
 
 local function CreateUIAfterkey()
+Window.Tabs["Key System"].TabButton:Destroy()
+Window.Tabs["Key System"] = nil
 local LocalPlayerTab = Window:AddTab("Local Player", "user")
 local LeftGroupbox = LocalPlayerTab:AddLeftGroupbox("Movement")
 
 local currentPlaceId = game.PlaceId
 
-if currentPlaceId == 6516141723 or currentPlaceId == 6839171747 then
+if currentPlaceId == 6516141723 then
     Doors()
     else
     print("Game ID: "..currentPlaceId)
