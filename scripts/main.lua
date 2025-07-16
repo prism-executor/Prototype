@@ -379,6 +379,7 @@ local keyInputBox = LeftKeySystem:AddInput("keyInput", {
 })
 
 local function CreateUIAfterkey()
+KeySystemTab:Destroy()
 local LocalPlayerTab = Window:AddTab("Local Player", "user")
 local LeftGroupbox = LocalPlayerTab:AddLeftGroupbox("Movement")
 
@@ -546,20 +547,20 @@ local function CheckKey()
         elseif success then
             Library:Notify({
                 Title = "Error",
-                Description = "An error occurred while verifying key.",
+                Description = "An error occurred while verifying your key.",
                 Time = 5,
             })
         else
             Library:Notify({
                 Title = "Error",
-                Description = "An error occurred while verifying key.",
+                Description = "An error occurred while verifying your key.",
                 Time = 5,
             })
         end
       else
         Library:Notify({
             Title = "Warning",
-            Description = "Please enter a key first.",
+            Description = "Enter a key first. If you have press enter then try again",
             Time = 5,
         })
     end
