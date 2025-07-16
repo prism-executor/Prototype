@@ -263,7 +263,16 @@ local getFlag = function(name)
     end
 end
 
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/deividcomsono/Obsidian/refs/heads/main/Library.lua"))()
+local success, result = pcall(function()
+    return loadstring(game:HttpGet("https://raw.githubusercontent.com/deividcomsono/Obsidian/refs/heads/main/Library.lua"))
+end)
+
+if not success or type(result) ~= "function" then
+    warn("Failed to load Library. Check the URL or GitHub status.")
+    return
+end
+
+local Library = result()
 local player = game.Players.LocalPlayer
 local UIS = game:GetService("UserInputService")
 local character = player.Character or player.CharacterAdded:Wait()
