@@ -306,7 +306,6 @@ local KeySystemTab = Window:AddTab("Key System", "key-round")
 
 local LeftKeySystem = KeySystemTab:AddLeftGroupbox("Key System")
 
-local function Doors()
 local UIS = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -551,7 +550,7 @@ local LeftGroupbox = LocalPlayerTab:AddLeftGroupbox("Movement")
 
 local currentPlaceId = game.PlaceId
 
-if currentPlaceId == 6839171747 then
+if currentPlaceId == 6516141723 then
     Doors()
     else
     print("Game ID: "..currentPlaceId)
