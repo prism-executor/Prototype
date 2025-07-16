@@ -304,8 +304,74 @@ local Window = Library:CreateWindow({
 
 local KeySystemTab = Window:AddTab("Key System", "key-round")
 
-local LeftKeySystem = KeySystemTab:AddLeftGroupbox("LeftKeySystem")
+local LeftKeySystem = KeySystemTab:AddLeftGroupbox("Key System")
 
+local function Doors()
+    local DoorsTab = Window:AddTab("Doors", "door-closed")
+    local DoorsGroup = DoorsTab:AddLeftGroupbox("Main")
+
+    DoorsGroup:AddLabel("Thanks For Using Prism!")
+    
+    local EspDropdown = DoorsGroup:AddDropdown("EspTarget", {
+        Text = "ESP Target",
+        Values = {"Entities", "Players", "Keys", "Gold", "Loot", "Doors"},
+        Multi = true,
+        Default = nil,
+        Callback = function(Values)
+            print("Currently enabled ESP options:")
+            for Option, Enabled in pairs(Values) do
+                if Enabled then
+                    print("-", Option)
+                end
+            end
+        end
+    })
+
+    -- Entity Features
+    local EntityBox = DoorsTab:AddLeftGroupbox("Entity Features")
+    EntityBox:AddToggle("EntityESP", { Text = "Entity ESP", Default = false })
+    EntityBox:AddToggle("NoScreech", { Text = "No Screech", Default = false })
+    EntityBox:AddToggle("NoEyesDamage", { Text = "No Eyes Damage", Default = false })
+    EntityBox:AddToggle("HaltSkip", { Text = "Halt Skip", Default = false })
+    EntityBox:AddToggle("FigureAutoStealth", { Text = "Figure Auto-Stealth", Default = false })
+    EntityBox:AddToggle("EntitySoundWarning", { Text = "Entity Sound Warning", Default = false })
+
+    -- Movement Features
+    local MovementBox = DoorsTab:AddRightGroupbox("Movement")
+    MovementBox:AddToggle("InfiniteJump", { Text = "Infinite Jump", Default = false })
+    MovementBox:AddToggle("Noclip", { Text = "Noclip", Default = false })
+    MovementBox:AddToggle("Fly", { Text = "Fly", Default = false })
+
+    -- Automation Features
+    local AutoBox = DoorsTab:AddLeftGroupbox("Automation")
+    AutoBox:AddToggle("AutoUseCrucifix", { Text = "Auto-Use Crucifix", Default = false })
+    AutoBox:AddToggle("AutoUnlockDoors", { Text = "Auto Unlock Doors", Default = false })
+    AutoBox:AddToggle("AutoWin", { Text = "Auto Win", Default = false })
+    AutoBox:AddToggle("AutoEscape", { Text = "Auto Escape", Default = false })
+    AutoBox:AddToggle("AutoGrab", { Text = "Auto Grab", Default = false })
+
+    -- Visuals & ESP
+    local VisualBox = DoorsTab:AddRightGroupbox("Visuals")
+    VisualBox:AddToggle("ItemESP", { Text = "Item ESP", Default = false })
+    VisualBox:AddToggle("DoorNumberESP", { Text = "Door Number ESP", Default = false })
+    VisualBox:AddToggle("FakeDoorDetector", { Text = "Fake Door Detector", Default = false })
+    VisualBox:AddToggle("PlayerESP", { Text = "Player ESP", Default = false })
+    VisualBox:AddToggle("PathfinderLines", { Text = "Pathfinder Lines", Default = false })
+    VisualBox:AddToggle("RoomInfoUI", { Text = "Room Info UI", Default = false })
+
+    -- Miscellaneous
+    local MiscBox = DoorsTab:AddLeftGroupbox("Misc")
+    MiscBox:AddToggle("ItemSpawner", { Text = "Item Spawner", Default = false })
+    MiscBox:AddSlider("GoldMultiplier", {
+        Text = "Gold Multiplier",
+        Min = 1,
+        Max = 10,
+        Default = 1,
+        Rounding = 1
+    })
+    MiscBox:AddToggle("GhostMode", { Text = "Ghost Mode", Default = false })
+    MiscBox:AddToggle("GameIDCheck", { Text = "Game ID Check", Default = false })
+end
 
 local keyInputBox = LeftKeySystem:AddInput("keyInput", {
     Placeholder = "Enter Key...",
@@ -319,36 +385,7 @@ local LeftGroupbox = LocalPlayerTab:AddLeftGroupbox("Movement")
 local currentPlaceId = game.PlaceId
 
 if currentPlaceId == 6516141723 then
-    local DoorsTab = Window:AddTab("Doors", "door-closed")
-    local DoorsGroup = DoorsTab:AddLeftGroupbox("Main")
-
-    DoorsGroup:AddLabel("Thanks For Using Prism!")
-    local EspDropdown = DoorsGroup:AddDropdown("EspTarget", {
-    Text = "ESP Target",
-    Values = {"Entities", "Players", "Keys", "Gold", "Loot", "Doors"},
-    Multi = true,
-    Default = nil,
-      Callback = function(Value)
-        print("ESP targeting:", Value)
-      end
-    })
-    DoorsGroup:AddToggle("AutoHide", {
-      Text = "Auto Hide",
-      Default = false,
-      Tooltip = "Enables Auto Hide.",
-      Callback = function(Value)
-          print("Auto Hide: "..Value)
-      end
-    })
-    local AutoPickupDropdown = DoorsGroup:AddDropdown("AutoPickup", {
-      Text = "Auto Pickup",
-      Values = {"Keys", "Coins", "Crucifix", "Lockpicks", "Vitamins", "Flashlight", "Items"},
-      Multi = true,
-      Default = nil,
-      Callback = function(Value)
-        print("Auto Pickup Values: "..Value)
-      end
-    })
+    Doors()
 end
 
 LeftGroupbox:AddToggle("WalkSpeedBoost", {
