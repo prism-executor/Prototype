@@ -384,7 +384,7 @@ local LeftGroupbox = LocalPlayerTab:AddLeftGroupbox("Movement")
 
 local currentPlaceId = game.PlaceId
 
-if currentPlaceId == 6516141723 then
+if currentPlaceId == 6516141723 or currentPlaceId == 6839171747 then
     Doors()
     else
     print("Game ID: "..currentPlaceId)
