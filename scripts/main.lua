@@ -386,6 +386,8 @@ local currentPlaceId = game.PlaceId
 
 if currentPlaceId == 6516141723 then
     Doors()
+    else
+    print("Game ID: "..currentPlaceId)
 end
 
 LeftGroupbox:AddToggle("WalkSpeedBoost", {
